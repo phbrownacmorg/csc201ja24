@@ -1,3 +1,5 @@
+import math
+
 def main(args: list[str]) -> int:
     # Characterize the function as a*x**2 + b*x + c = 0
     # Ask the user for a, b, and c
@@ -8,8 +10,13 @@ def main(args: list[str]) -> int:
     print("System is", a, '*x**2 +', b, '*x +', c, '= 0')
 
     # find the root(s)
+    determinant: float = b**2 - 4*a*c
+    #print(determinant) # for testing
+    root1: float = (-b + math.sqrt(determinant)) / (2*a)
+    root2: float = (-b - math.sqrt(determinant)) / (2*a)
 
     # print the root(s)
+    print('The roots are', root1, 'and', root2)
 
     return 0
 
