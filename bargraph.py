@@ -56,7 +56,7 @@ def main(args: list[str]) -> int:
         # Data labels
         label: Text = Text(Point(i+0.5, -0.02 * Pmax), str(i+1))
         label.draw(w)
-        label = Text(Point(i+0.5, P + 0.02 * Pmax), '$' + str(round(P, 2)))
+        label: Text = Text(Point(i+0.5, P + 0.02 * Pmax), '$' + str(round(P, 2)))
         label.draw(w)
 
     # Force the window to stay open until we click

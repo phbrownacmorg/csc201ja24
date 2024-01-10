@@ -1,8 +1,7 @@
 from graphics import *
-from typing import cast
 
 def main(args: list[str]) -> int:
-    w: GraphWin = GraphWin('Graphics window', 800, 800)
+    w: GraphWin = GraphWin('Graphics window', 300, 120)
     # Rearrange the coordinate system to be easier to think about.
     # X increases to the right, Y increases up.  The origin is in
     # the center, and the absolute value of any coordinate tells you
@@ -11,18 +10,23 @@ def main(args: list[str]) -> int:
     # the window (it will scale to any size).
     w.setCoords(-1, -1, 1, 1)
 
-    mouse: Circle = Circle(Point(0, 0), 0.05)
-    mouse.setFill('gray')
-    mouse.draw(w)
+    instructions: Text = Text(Point(0, 0.5), 
+                              'Put a color name (or hexadecimal color\n'
+                              + 'specification) in the blank, and click\n'
+                              + 'to set the background color of the window.')
+    instructions.draw(w)
+
+    print(color_rgb(0, 255, 255))
+
+    entry: Entry = Entry(Point(0, -0.5), 20)
+    entry.setFill('white')
+    entry.draw(w)
+
+    w.getMouse()
+    w.setBackground(entry.getText())
 
     # DRAW STUFF HERE
-    # Chase the mouse for 5 mouse clicks
-    for i in range(5):
-        pt: Point = cast(Point, w.getMouse())
-        # Move the little gray mouse to the click
-        mousePt: Point = mouse.getCenter()
-        mouse.move(pt.getX() - mousePt.getX(),
-                   pt.getY() - mousePt.getY())
+
 
     # Force the window to stay open until we click
     w.getMouse()
