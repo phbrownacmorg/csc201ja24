@@ -1,5 +1,85 @@
 from graphics import *
+import math
 from typing import cast
+
+def drawAnimal(animal: list[GraphicsObject], w: GraphWin) -> None:
+    for part in animal:
+        part.draw(w)
+
+def moveAnimalTo(animal: list[GraphicsObject], destination: Point) -> None:
+    currentLoc: Point = cast(Circle, animal[0]).getCenter()
+    dx: float = destination.getX() - currentLoc.getX()
+    dy: float = destination.getY() - currentLoc.getY()
+    for part in animal:
+        part.move(dx, dy)
+
+def makeEyes(radius: float, color: str) -> list[GraphicsObject]:
+    eyeList = []
+    for x_sign in [-1, 1]:
+        eye: Oval = Oval(Point(x_sign * 0.05 * radius, 0), Point(x_sign * 0.6 * radius, 0.7 * radius))
+        eye.setFill(color)
+        eyeList.append(eye)
+    return eyeList
+
+def makeMouseEars(radius: float, color: str) -> list[GraphicsObject]:
+    earList = []
+    angle = math.radians(55)
+    ear_radius = 0.6 * radius
+    for x_sign in [-1, 1]:
+        ear: Circle = Circle(Point(1.3 * radius * math.cos(angle) * x_sign,
+                                   1.3 * radius * math.sin(angle)), ear_radius)
+        ear.setOutline(color)
+        ear.setFill(color)
+        earList.append(ear)
+    return earList
+
+def makeMouth(radius: float) -> list[GraphicsObject]:
+    lines = []
+    angle = math.radians(-55)
+    length = 0.6
+    for x_sign in [-1, 1]:
+        line = Line(Point(0, -0.3 * radius), 
+                    Point(length * radius * math.cos(angle) * x_sign,
+                          length * radius * math.sin(angle)))
+        lines.append(line)
+    return lines
+
+def makeNose(radius: float, color: str) -> Polygon:
+    size = 0.3
+    nose = Polygon(Point(0, -size * radius),
+                   Point((-size/2) * radius, 0),
+                   Point((size/2) * radius, 0))
+    nose.setFill(color)
+    return nose
+
+def makeWhiskers(radius: float) -> list[GraphicsObject]:
+    whiskerList: list[GraphicsObject] = []
+    inner_r = 0.7
+    outer_r = 1.7
+    angle = math.radians(10)
+    for x_sign in [1, -1]:
+        for i in [-1, 0, 1]:
+            whisker = Line(Point(x_sign * inner_r * radius * math.cos(i * angle),
+                                 inner_r * radius * math.sin(i * angle)),
+                           Point(x_sign * outer_r * radius * math.cos(i * angle),
+                                 outer_r * radius * math.sin(i * angle)))
+            whiskerList.append(whisker)
+    return whiskerList
+
+def makeHead(radius: float, color: str) -> Circle:
+    head = Circle(Point(0, 0), radius)
+    head.setFill('gray')
+    head.setOutline('gray')
+    return head
+
+def makeMouse(radius: float) -> list[GraphicsObject]:
+    result: list[GraphicsObject] = [makeHead(radius, 'gray')]
+    result.extend(makeMouseEars(radius, 'gray'))
+    result.extend(makeEyes(radius, 'black'))
+    result.extend(makeMouth(radius))
+    result.append(makeNose(radius, 'black'))
+    result.extend(makeWhiskers(radius))
+    return result
 
 def main(args: list[str]) -> int:
     w: GraphWin = GraphWin('Graphics window', 800, 800)
@@ -11,18 +91,13 @@ def main(args: list[str]) -> int:
     # the window (it will scale to any size).
     w.setCoords(-1, -1, 1, 1)
 
-    mouse: Circle = Circle(Point(0, 0), 0.05)
-    mouse.setFill('gray')
-    mouse.draw(w)
+    mouse: list[GraphicsObject] = makeMouse(0.05)
+    drawAnimal(mouse, w)
 
     # DRAW STUFF HERE
     # Chase the mouse for 5 mouse clicks
     for i in range(5):
-        pt: Point = cast(Point, w.getMouse())
-        # Move the little gray mouse to the click
-        mousePt: Point = mouse.getCenter()
-        mouse.move(pt.getX() - mousePt.getX(),
-                   pt.getY() - mousePt.getY())
+        moveAnimalTo(mouse, w.getMouse())
 
     # Force the window to stay open until we click
     w.getMouse()
