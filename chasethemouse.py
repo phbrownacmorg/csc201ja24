@@ -6,8 +6,11 @@ def drawAnimal(animal: list[GraphicsObject], w: GraphWin) -> None:
     for part in animal:
         part.draw(w)
 
+def getCenter(animal: list[GraphicsObject]) -> Point:
+    return cast(Circle, animal[0]).getCenter()
+
 def moveAnimalTo(animal: list[GraphicsObject], destination: Point) -> None:
-    currentLoc: Point = cast(Circle, animal[0]).getCenter()
+    currentLoc: Point = getCenter(animal)
     dx: float = destination.getX() - currentLoc.getX()
     dy: float = destination.getY() - currentLoc.getY()
     for part in animal:
@@ -30,6 +33,24 @@ def makeMouseEars(radius: float, color: str) -> list[GraphicsObject]:
                                    1.3 * radius * math.sin(angle)), ear_radius)
         ear.setOutline(color)
         ear.setFill(color)
+        earList.append(ear)
+    return earList
+
+def makeCatEars(radius: float, color: str) -> list[GraphicsObject]:
+    earList = []
+    central_angle = math.radians(55)
+    side_angle = math.radians(25)
+    tip_radius = 1.8 * radius
+    for x_sign in [-1, 1]:
+        tip = Point(tip_radius * math.cos(central_angle) * x_sign,
+                    tip_radius * math.sin(central_angle))
+        top = Point(radius * math.cos(central_angle + side_angle) * x_sign,
+                    radius * math.sin(central_angle + side_angle))
+        bottom = Point(radius * math.cos(central_angle - side_angle) * x_sign,
+                       radius * math.sin(central_angle - side_angle))
+        ear = Polygon(tip, top, bottom)
+        ear.setFill(color)
+        ear.setOutline(color)
         earList.append(ear)
     return earList
 
@@ -68,14 +89,23 @@ def makeWhiskers(radius: float) -> list[GraphicsObject]:
 
 def makeHead(radius: float, color: str) -> Circle:
     head = Circle(Point(0, 0), radius)
-    head.setFill('gray')
-    head.setOutline('gray')
+    head.setFill(color)
+    head.setOutline(color)
     return head
 
 def makeMouse(radius: float) -> list[GraphicsObject]:
     result: list[GraphicsObject] = [makeHead(radius, 'gray')]
     result.extend(makeMouseEars(radius, 'gray'))
     result.extend(makeEyes(radius, 'black'))
+    result.extend(makeMouth(radius))
+    result.append(makeNose(radius, 'black'))
+    result.extend(makeWhiskers(radius))
+    return result
+
+def makeCat(radius: float) -> list[GraphicsObject]:
+    result: list[GraphicsObject] = [makeHead(radius, 'orange')]
+    result.extend(makeCatEars(radius, 'orange'))
+    result.extend(makeEyes(radius, 'green'))
     result.extend(makeMouth(radius))
     result.append(makeNose(radius, 'black'))
     result.extend(makeWhiskers(radius))
@@ -93,11 +123,16 @@ def main(args: list[str]) -> int:
 
     mouse: list[GraphicsObject] = makeMouse(0.05)
     drawAnimal(mouse, w)
+    cat: list[GraphicsObject] = makeCat(0.2)
+    moveAnimalTo(cat, Point(2, 0))
+    drawAnimal(cat, w)
 
     # DRAW STUFF HERE
     # Chase the mouse for 5 mouse clicks
     for i in range(5):
+        mousePt = getCenter(mouse)
         moveAnimalTo(mouse, w.getMouse())
+        moveAnimalTo(cat, mousePt)
 
     # Force the window to stay open until we click
     w.getMouse()
