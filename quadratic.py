@@ -11,11 +11,13 @@ def read_quadratic() -> tuple[float, float, float]:
 
 def find_roots(a: float, b: float, c: float) -> tuple[float, float]:
     """Find the roots of a quadratic A*x**2 + B*x + C = 0, and return them
-    as a tuple."""
+    as a tuple.  If there are no real roots, this returns the tuple (NaN, NaN)."""
+    root1, root2 = math.nan, math.nan
     determinant: float = b**2 - 4*a*c
     #print(determinant) # for testing
-    root1: float = (-b + math.sqrt(determinant)) / (2*a)
-    root2: float = (-b - math.sqrt(determinant)) / (2*a)
+    if determinant >= 0: # Don't take the square root of a negative number
+        root1 = (-b + math.sqrt(determinant)) / (2*a)
+        root2 = (-b - math.sqrt(determinant)) / (2*a)
     return root1, root2
 
 def main(args: list[str]) -> int:
@@ -27,7 +29,10 @@ def main(args: list[str]) -> int:
     # find the root(s)
     root1, root2 = find_roots(a, b, c)    
     # print the root(s)
-    print('The roots are', root1, 'and', root2)
+    if not math.isnan(root1): # if root1 is real, so is root2
+        print('The roots are', root1, 'and', root2)
+    else:
+        print('There are no real roots.')
 
     return 0
 
