@@ -17,7 +17,7 @@ def moveAnimalTo(animal: list[GraphicsObject], destination: Point) -> None:
         part.move(dx, dy)
 
 def makeEyes(radius: float, color: str) -> list[GraphicsObject]:
-    eyeList = []
+    eyeList: list[GraphicsObject] = []
     for x_sign in [-1, 1]:
         eye: Oval = Oval(Point(x_sign * 0.05 * radius, 0), Point(x_sign * 0.6 * radius, 0.7 * radius))
         eye.setFill(color)
@@ -25,7 +25,7 @@ def makeEyes(radius: float, color: str) -> list[GraphicsObject]:
     return eyeList
 
 def makeMouseEars(radius: float, color: str) -> list[GraphicsObject]:
-    earList = []
+    earList: list[GraphicsObject] = []
     angle = math.radians(55)
     ear_radius = 0.6 * radius
     for x_sign in [-1, 1]:
@@ -37,7 +37,7 @@ def makeMouseEars(radius: float, color: str) -> list[GraphicsObject]:
     return earList
 
 def makeCatEars(radius: float, color: str) -> list[GraphicsObject]:
-    earList = []
+    earList: list[GraphicsObject] = []
     central_angle = math.radians(55)
     side_angle = math.radians(25)
     tip_radius = 1.8 * radius
@@ -55,7 +55,7 @@ def makeCatEars(radius: float, color: str) -> list[GraphicsObject]:
     return earList
 
 def makeMouth(radius: float) -> list[GraphicsObject]:
-    lines = []
+    lines: list[GraphicsObject] = []
     angle = math.radians(-55)
     length = 0.6
     for x_sign in [-1, 1]:
