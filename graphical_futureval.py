@@ -37,14 +37,22 @@ def print_table(values: list[float]) -> None:
     for i in range(1, len(values)):
         print('{0:4}\t${1:9.2f}\t${2:11.2f}'.format(i, values[i]-values[i-1], values[i]))
 
-# For later
-# def find_tick_value(maxVal: float) -> int:
-#     """Given a maximum value, find a tick value that is (1) round, and (2) gives
-#     3-15 tick marks going up to maxVal."""
-#     intlog = math.floor(math.log10(maxVal))
-#     tick = 10 ** intlog # Known to be round number, fewer than 10
-#     # if maxVal / tick > 3, that's my answer
-
+def find_tick_value(maxVal: float) -> int:
+    """Given a maximum value, find a tick value that is (1) round, and (2) gives
+    5-15 tick marks going up to maxVal."""
+    intlog = math.floor(math.log10(maxVal))
+    tick = 10 ** intlog
+    # tick is the biggest power of 10 <= maxVal
+    # At this point, I know 1 <= (maxVal/tick) < 10
+    if (maxVal / tick) < 2.5:
+        tick = tick / 5 # tick is now 20, 200, 2000, etc.
+        # 5 < (tick / maxVal) < 12.5
+    elif (maxVal/tick) < 5: # and maxVal / tick >= 2.5
+        tick = tick / 2
+        # tick is now half the power of 10 (50, 500, 5000, etc.)
+        # 5 <= (maxVal/tick) < 10
+    return tick
+    
 def drawAxis(w: GraphWin, outerEnd: Point) -> None:
     axis: Line = Line(Point(0,0), outerEnd)
     axis.setArrow('last')
@@ -54,7 +62,12 @@ def graph(values: list[float]) -> None:
     # Find the range of values
     Xmax: int = len(values)
     Ymax: float = max(values)
-    #tick_spacing: int = find_tick_value(Ymax)
+    tick_spacing: int = find_tick_value(Ymax)
+    Ymax = math.ceil(Ymax / tick_spacing) * tick_spacing # integer value, float type
+    # Using round instead of // because Ymax could be a little smaller than it's supposed to be
+    num_ticks: int = round(Ymax / tick_spacing) 
+    #print(max(values), tick_spacing, Ymax, num_ticks)
+
     margin: float = .15
 
     # Create the window and set its coordinates
@@ -77,9 +90,11 @@ def graph(values: list[float]) -> None:
         label.draw(win)
 
     # Labels in Y
-    for i in range(len(values)):
-        label = Text(Point(i + 0.5, values[i] + ((margin/5) * Ymax)), 
-                     '$'+str(round(values[i])))
+    for i in range(num_ticks+1):
+        y: int = i * tick_spacing
+        tick = Line(Point(0, y), Point(-(margin/10) * Xmax, y))
+        tick.draw(win)
+        label = Text(Point(-(0.5 * margin) * Xmax, y), '${:,.0f}'.format(y))
         label.draw(win)
 
     # Wait for a click so we can see it
