@@ -1,6 +1,7 @@
 from graphics import *
 import math
 from typing import cast
+from button import make_button, inside
 
 def drawAnimal(animal: list[GraphicsObject], w: GraphWin) -> None:
     for part in animal:
@@ -111,6 +112,16 @@ def makeCat(radius: float) -> list[GraphicsObject]:
     result.extend(makeWhiskers(radius))
     return result
 
+def caught(predator: list[GraphicsObject], prey: list[GraphicsObject]) -> bool:
+    """Returns True if the distance between predator and prey is less than the
+    radius of the predator (that is, the predator has caught the prey)."""
+    predatorPt = getCenter(predator)
+    preyPt = getCenter(prey)
+    distance = math.sqrt((predatorPt.getX() - preyPt.getX())**2 + 
+                         (predatorPt.getY() - preyPt.getY())**2)
+    return distance < cast(Circle, predator[0]).getRadius()
+
+
 def main(args: list[str]) -> int:
     w: GraphWin = GraphWin('Graphics window', 800, 800)
     # Rearrange the coordinate system to be easier to think about.
@@ -121,6 +132,9 @@ def main(args: list[str]) -> int:
     # the window (it will scale to any size).
     w.setCoords(-1, -1, 1, 1)
 
+    quit_button = make_button(w, Point(-1, 1), Point(-.8, .8),
+                            'Quit')
+
     mouse: list[GraphicsObject] = makeMouse(0.05)
     drawAnimal(mouse, w)
     cat: list[GraphicsObject] = makeCat(0.2)
@@ -129,13 +143,16 @@ def main(args: list[str]) -> int:
 
     # DRAW STUFF HERE
     # Chase the mouse for 5 mouse clicks
-    for i in range(5):
+    distance = 2
+    click = w.getMouse()
+    while not inside(quit_button, click) and not caught(cat, mouse):
         mousePt = getCenter(mouse)
-        moveAnimalTo(mouse, w.getMouse())
+        moveAnimalTo(mouse, click)
         moveAnimalTo(cat, mousePt)
+        click = w.getMouse() # MUST update the variable used in the loop condition
 
     # Force the window to stay open until we click
-    w.getMouse()
+    #w.getMouse()
     w.close()
     return 0
 

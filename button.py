@@ -9,6 +9,13 @@ def inside(rect: Rectangle, pt: Point) -> bool:
     maxY = max(p1.getY(), p2.getY())
     return minX < pt.getX() < maxX and minY < pt.getY() < maxY
 
+def make_button(w: GraphWin, p1: Point, p2: Point, text: str) -> Rectangle:
+    button: Rectangle = Rectangle(p1, p2)
+    button.draw(w)
+    label = Text(button.getCenter(), text)
+    label.draw(w)
+    return button
+
 def main(args: list[str]) -> int:
     w: GraphWin = GraphWin('Graphics window', 800, 800)
     # Rearrange the coordinate system to be easier to think about.
@@ -19,10 +26,8 @@ def main(args: list[str]) -> int:
     # the window (it will scale to any size).
     w.setCoords(-1, -1, 1, 1)
 
-    button: Rectangle = Rectangle(Point(-1, 1), Point(-.8, .8))
-    button.draw(w)
-    label: Text = Text(button.getCenter(), 'Quit')
-    label.draw(w)
+    button: Rectangle = make_button(w, Point(-1, 1), Point(-.8, .8),
+                                    'Quit')
     instructions: Text = Text(Point(0, -0.8), 
                               'Click in the Quit button to quit')
     instructions.draw(w)
