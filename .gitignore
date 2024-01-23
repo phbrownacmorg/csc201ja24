@@ -1,3 +1,5 @@
+mypy.ini
+
 # CSV files that get generated, which shouldn't be saved
 names.csv
 userids.csv
