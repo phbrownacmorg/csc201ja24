@@ -10,7 +10,7 @@ def read_names(filename: str) -> list[list[str]]:
 
 def simplify_name(name: str) -> str:
     # Remove characters from the name that we don't want in the result
-    unwanted_chars = " '-,."
+    unwanted_chars = " ',."
     for c in unwanted_chars:
         name = name.replace(c, '')
 
@@ -49,7 +49,7 @@ def make_userids(namelist: list[list[str]]) -> list[list[str]]:
         # and middle initials and last name
         userid = (initials + lastname + '001').lower()
         
-        idlist.append([lastname, name[1].strip(), userid])
+        idlist.append([name[0], name[1].strip(), userid])
     #print(idlist)
 
     return idlist

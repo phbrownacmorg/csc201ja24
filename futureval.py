@@ -40,6 +40,7 @@ def main(args: list[str]) -> int:
     print('Investing $', P, 'at', rate, '% for', periods, 'compounding periods:')
 
     values = calc_futureval(P, rate/100, periods)
+    print(values[-1], P * (1 + (rate/100))**periods)
     print_table(values)
 
     return 0
