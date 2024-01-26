@@ -68,9 +68,12 @@ def main(args: list[str]) -> int:
     phonebook: dict[str, str] = read_phonebook(filename, default_filename)
     print(phonebook)
     
+    # Use map and reversed to make a reverse phonebook (number to name)
     rev_book: dict[str, str] = dict(map(reversed, phonebook.items()))
     print(rev_book)
 
+    # Using sorted and tuple, sort the entries (items) in the phonebook
+    # by the last 4 digits of the phone number
     print(sorted(tuple(phonebook.items()), key=byExtension))
 
     op = input('Would you like to add an entry (A), '

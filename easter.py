@@ -28,15 +28,20 @@ def main(args: list[str]) -> int:
     print('Easter of ', year, end=' ')
     print('is', easter(year))
 
-    
+    # Use map to find all the dates of Easter from 1982-2048, inclusive
     easters = list(map(easter, range(1982, 2049)))
+
+    # Filter them to find the ones in March
     march_easters = list(filter(inMarch, easters))
     for d in march_easters:
         print(d)
     print()
 
     # list comprehensions
+    # Generate all the dates from 3/22 to 4/25, inclusive
     dates = [date(2024, 3, 22) + timedelta(i) for i in range(34)]
+
+    # Use an "if" within the comprehension to limit to the ones in March
     march_dates = [date(2024, 3, 22) + timedelta(i) for i in range(34) if i < 10]
     for d in march_dates:
         print(d)
