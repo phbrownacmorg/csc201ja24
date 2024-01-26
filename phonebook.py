@@ -58,6 +58,8 @@ def lookup_entry(phonebook: dict[str, str]) -> None:
     else:
         print('The number for {} is {}.'.format(name, number))
 
+def byExtension(item: tuple[str, str]) -> str:
+    return item[1][-4:]
 
 def main(args: list[str]) -> int:
     default_filename = 'phonebook.csv'
@@ -66,6 +68,11 @@ def main(args: list[str]) -> int:
     phonebook: dict[str, str] = read_phonebook(filename, default_filename)
     print(phonebook)
     
+    rev_book: dict[str, str] = dict(map(reversed, phonebook.items()))
+    print(rev_book)
+
+    print(sorted(tuple(phonebook.items()), key=byExtension))
+
     op = input('Would you like to add an entry (A), '
                + 'look up an entry (L), or quit (Q)? (A/L/Q) ').upper()
     while len(op) > 0 and op[0] in 'AL': # Make it easy to quit

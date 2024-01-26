@@ -12,7 +12,7 @@ def read_parameters() -> tuple[float, float, int]:
     periods: int = int(input('Please enter the number of periods: '))
     return P, rate, periods
 
-def calc_futureval(P: float, rate: float, periods: int) -> list[float]:
+def calc_futureval_loop(P: float, rate: float, periods: int) -> list[float]:
     """Calculate the future value of an investment with principal P
     and interest rate RATE (as a quantity, not a percentage), over
     PERIODS compounding periods.  Returns a list of PERIODS+1 numbers,
@@ -24,6 +24,15 @@ def calc_futureval(P: float, rate: float, periods: int) -> list[float]:
         P = P + interest
         values.append(P)
     return values
+
+def calc_futureval(P: float, rate: float, periods: int) -> list[float]:
+    """Calculate the future value of an investment with principal P
+    and interest rate RATE (as a quantity, not a percentage), over
+    PERIODS compounding periods.  Returns a list of PERIODS+1 numbers,
+    representing the principal at the end of each of the compounding
+    periods."""
+    return [(P * (1 + rate)**i) for i in range(periods+1)]
+
 
 def print_table(values: list[float]) -> None:
 
