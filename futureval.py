@@ -30,7 +30,7 @@ def calc_futureval(P: float, rate: float, periods: int) -> list[float]:
     and interest rate RATE (as a quantity, not a percentage), over
     PERIODS compounding periods.  Returns a list of PERIODS+1 numbers,
     representing the principal at the end of each of the compounding
-    periods."""
+    periods.  Use a list comprehension for this, rather than a loop."""
     return [(P * (1 + rate)**i) for i in range(periods+1)]
 
 
